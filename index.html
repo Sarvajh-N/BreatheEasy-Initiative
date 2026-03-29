@@ -1,3 +1,13 @@
+<!--
+  =============================================
+  BreatheEasy — Version B (Empowerment Framing)
+  =============================================
+  Same mobile-app layout as Version A, but with green hero
+  and empowerment messaging ("Take control").
+
+  QR Code A → yourusername.github.io/breatheasy/
+  QR Code B → yourusername.github.io/breatheasy/b/
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +15,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#1e3a5f">
+  <meta name="theme-color" content="#065f46">
   <title>BreatheEasy</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" href="../icon-192.png">
+  <link rel="stylesheet" href="../style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -23,23 +33,13 @@
   <!-- ===== TAB: HOME (Eligibility Check) ===== -->
   <div id="tab-home" class="tab active">
 
-    <div class="app-header hero-a">
+    <!-- Version B: Green hero, empowerment framing -->
+    <div class="app-header hero-b">
       <div class="hero-title-row">
-        <svg class="hero-lungs" width="36" height="32" viewBox="0 0 200 170" fill="none">
-          <path d="M100 8 L100 55" stroke="rgba(255,255,255,0.9)" stroke-width="6" stroke-linecap="round"/>
-          <path d="M93 18 L107 18 M93 28 L107 28 M93 38 L107 38 M93 48 L107 48" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
-          <path d="M95 55 Q75 45 55 50 C25 38 15 65 18 90 C20 118 35 140 55 148 C70 155 85 148 92 135 C96 120 98 95 97 72 Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.8)" stroke-width="3.5"/>
-          <path d="M105 55 Q125 45 145 50 C175 38 185 65 182 90 C180 118 165 140 145 148 C130 155 115 148 108 135 C104 120 102 95 103 72 Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.8)" stroke-width="3.5"/>
-          <path d="M100 55 Q80 48 60 55" stroke="rgba(255,255,255,0.8)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
-          <path d="M78 50 Q60 65 45 80" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <path d="M65 55 Q48 72 40 100" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <path d="M100 55 Q120 48 140 55" stroke="rgba(255,255,255,0.8)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
-          <path d="M122 50 Q140 65 155 80" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <path d="M135 55 Q152 72 160 100" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" fill="none"/>
-        </svg>
+        <img class="hero-lungs" src="../lungs.avif" alt="Lungs" width="40" height="40">
         <h1>BreatheEasy</h1>
       </div>
-      <p data-i18n="tagline_a">$0 lung cancer screening. Check if you qualify.</p>
+      <p data-i18n="tagline_b">One scan. 60 seconds. Take control.</p>
     </div>
 
     <div class="app-body">
@@ -73,7 +73,7 @@
             <input type="number" id="quit-years" min="0" max="80" placeholder="0" required>
             <span class="hint" data-i18n="hint_quit">Enter 0 if you still smoke</span>
           </div>
-          <button type="submit" class="btn-primary" data-i18n="cta_check">Check Eligibility</button>
+          <button type="submit" class="btn-primary" style="background:#10b981;" data-i18n="cta_check">Check Eligibility</button>
         </form>
       </div>
 
@@ -120,28 +120,28 @@
 
   <!-- ===== TAB: SCAN DAY ===== -->
   <div id="tab-scan" class="tab">
-    <div class="app-header hero-a">
+    <div class="app-header hero-b">
       <h1 data-i18n="expect_title">Scan Day</h1>
       <p data-i18n="expect_subtitle">Quick, painless, nothing to fear.</p>
     </div>
     <div class="app-body">
       <div class="card timeline-card">
         <div class="tl-item">
-          <div class="tl-icon">1</div>
+          <div class="tl-icon" style="background:#10b981;">1</div>
           <div>
             <h3 data-i18n="expect_step1_title">Check In</h3>
             <p data-i18n="expect_step1_desc">No fasting, no prep, no needles. Wear comfy clothes without metal — you may change into a gown.</p>
           </div>
         </div>
         <div class="tl-item">
-          <div class="tl-icon">2</div>
+          <div class="tl-icon" style="background:#10b981;">2</div>
           <div>
             <h3 data-i18n="expect_step2_title">The Scan (~60 sec)</h3>
             <p data-i18n="expect_step2_desc">Lie on a table that slides into an open ring — not a closed tube. Hold your breath 10 seconds and you're done.</p>
           </div>
         </div>
         <div class="tl-item">
-          <div class="tl-icon">3</div>
+          <div class="tl-icon" style="background:#10b981;">3</div>
           <div>
             <h3 data-i18n="expect_step3_title">Results</h3>
             <p data-i18n="expect_step3_desc">Your doctor contacts you within a week. Most scans are clear — if something is found, early detection means better outcomes.</p>
@@ -165,7 +165,7 @@
 
   <!-- ===== TAB: FIND ===== -->
   <div id="tab-find" class="tab">
-    <div class="app-header hero-a">
+    <div class="app-header hero-b">
       <h1 data-i18n="find_title">Find Centers</h1>
       <p data-i18n="find_text_short">Search by zip code.</p>
     </div>
@@ -176,7 +176,7 @@
             <label for="zip-code" data-i18n="label_zip">Zip Code</label>
             <input type="text" id="zip-code" pattern="[0-9]{5}" maxlength="5" inputmode="numeric" placeholder="92101" required>
           </div>
-          <button type="submit" class="btn-primary" data-i18n="find_btn">Search</button>
+          <button type="submit" class="btn-primary" style="background:#10b981;" data-i18n="find_btn">Search</button>
         </form>
       </div>
 
@@ -190,9 +190,9 @@
     </div>
   </div>
 
-  <!-- ===== TAB: MORE (FAQ + Privacy + Stories) ===== -->
+  <!-- ===== TAB: MORE ===== -->
   <div id="tab-more" class="tab">
-    <div class="app-header hero-a">
+    <div class="app-header hero-b">
       <h1 data-i18n="faq_title">More Info</h1>
     </div>
     <div class="app-body">
@@ -269,6 +269,6 @@
     </button>
   </nav>
 
-  <script src="app.js"></script>
+  <script src="../app.js"></script>
 </body>
 </html>

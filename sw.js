@@ -22,7 +22,8 @@ var FILES_TO_CACHE = [
   './app.js',
   './icon-192.png',
   './icon-512.png',
-  './manifest.json'
+  './manifest.json',
+  './lungs.avif'
 ];
 
 // ---- INSTALL EVENT ----
