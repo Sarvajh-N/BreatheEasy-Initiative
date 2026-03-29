@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1e3a5f">
+  <title>BreatheEasy</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- LANGUAGE TOGGLE -->
+  <div id="lang-bar" class="lang-bar">
+    <button id="lang-en" class="lang-btn lang-active">EN</button>
+    <button id="lang-es" class="lang-btn">ES</button>
+  </div>
+
+  <!-- ===== TAB: HOME (Eligibility Check) ===== -->
+  <div id="tab-home" class="tab active">
+
+    <div class="app-header hero-a">
+      <div class="hero-title-row">
+        <img class="hero-lungs" src="lungs.avif" alt="Lungs" width="40" height="40">
+        <h1>BreatheEasy</h1>
+      </div>
+      <p data-i18n="tagline_a">$0 lung cancer screening. Check if you qualify.</p>
+    </div>
+
+    <div class="app-body">
+
+      <!-- STEP INDICATORS -->
+      <div class="mini-steps">
+        <div class="mini-step" id="ms-1"><span>1</span> Check</div>
+        <div class="mini-step" id="ms-2"><span>2</span> PDF</div>
+        <div class="mini-step" id="ms-3"><span>3</span> Doctor</div>
+      </div>
+
+      <!-- ELIGIBILITY FORM -->
+      <div class="card" id="card-form">
+        <h2 data-i18n="calc_title">Am I Eligible?</h2>
+        <form id="eligibility-form" autocomplete="off">
+          <div class="form-group">
+            <label for="age" data-i18n="label_age">Your Age</label>
+            <input type="number" id="age" min="18" max="120" placeholder="55" required>
+          </div>
+          <div class="form-group">
+            <label for="packs-per-day" data-i18n="label_packs">Packs Per Day</label>
+            <input type="number" id="packs-per-day" min="0" max="10" step="0.5" placeholder="1" required>
+            <span class="hint" data-i18n="hint_pack">1 pack = 20 cigarettes</span>
+          </div>
+          <div class="form-group">
+            <label for="years-smoked" data-i18n="label_years">Years Smoked</label>
+            <input type="number" id="years-smoked" min="0" max="80" placeholder="25" required>
+          </div>
+          <div class="form-group">
+            <label for="quit-years" data-i18n="label_quit">Years Since Quitting</label>
+            <input type="number" id="quit-years" min="0" max="80" placeholder="0" required>
+            <span class="hint" data-i18n="hint_quit">Enter 0 if you still smoke</span>
+          </div>
+          <button type="submit" class="btn-primary" data-i18n="cta_check">Check Eligibility</button>
+        </form>
+      </div>
+
+      <!-- RESULT: ELIGIBLE -->
+      <div class="card card-eligible hidden" id="result-eligible">
+        <div class="result-icon">&#10003;</div>
+        <h2 data-i18n="eligible_title">You May Be Eligible!</h2>
+        <div class="result-stats">
+          <div class="stat"><span class="stat-label">Age</span><span class="stat-val" id="res-age"></span></div>
+          <div class="stat"><span class="stat-label">Pack-Years</span><span class="stat-val" id="res-pack-years"></span></div>
+          <div class="stat"><span class="stat-label">Quit</span><span class="stat-val" id="res-quit"></span></div>
+        </div>
+        <p data-i18n="eligible_msg">You meet USPSTF criteria for a <strong>free annual LDCT screening</strong>.</p>
+        <button id="download-pdf" class="btn-primary" data-i18n="cta_pdf">Download Referral PDF</button>
+        <div id="post-download" class="hidden post-download">
+          <button id="intent-btn" class="btn-secondary" data-i18n="intent_btn">I'll take this to my doctor</button>
+          <button id="calendar-btn" class="btn-outline" data-i18n="calendar_btn">Add Calendar Reminder</button>
+          <p id="intent-thanks" class="hidden toast" data-i18n="intent_thanks">Thank you! Early detection saves lives.</p>
+          <p id="calendar-thanks" class="hidden toast" data-i18n="calendar_thanks">Reminder added!</p>
+        </div>
+      </div>
+
+      <!-- RESULT: INELIGIBLE -->
+      <div class="card card-ineligible hidden" id="result-ineligible">
+        <div class="result-icon result-icon-warn">!</div>
+        <h2 data-i18n="ineligible_title">Not Currently Eligible</h2>
+        <div class="result-stats">
+          <div class="stat"><span class="stat-label">Age</span><span class="stat-val" id="res-age-no"></span></div>
+          <div class="stat"><span class="stat-label">Pack-Years</span><span class="stat-val" id="res-pack-years-no"></span></div>
+          <div class="stat"><span class="stat-label">Quit</span><span class="stat-val" id="res-quit-no"></span></div>
+        </div>
+        <p id="ineligible-reason" class="reason-text"></p>
+        <p data-i18n="ineligible_advice">Talk to your doctor if you have concerns.</p>
+      </div>
+
+      <!-- PRIVACY BADGE -->
+      <div class="privacy-badge" data-i18n="privacy_badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Zero data stored. All calculations happen on your device.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== TAB: SCAN DAY ===== -->
+  <div id="tab-scan" class="tab">
+    <div class="app-header hero-a">
+      <h1 data-i18n="expect_title">Scan Day</h1>
+      <p data-i18n="expect_subtitle">Quick, painless, nothing to fear.</p>
+    </div>
+    <div class="app-body">
+      <div class="card timeline-card">
+        <div class="tl-item">
+          <div class="tl-icon">1</div>
+          <div>
+            <h3 data-i18n="expect_step1_title">Check In</h3>
+            <p data-i18n="expect_step1_desc">No fasting, no prep, no needles. Wear comfy clothes without metal — you may change into a gown.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-icon">2</div>
+          <div>
+            <h3 data-i18n="expect_step2_title">The Scan (~60 sec)</h3>
+            <p data-i18n="expect_step2_desc">Lie on a table that slides into an open ring — not a closed tube. Hold your breath 10 seconds and you're done.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-icon">3</div>
+          <div>
+            <h3 data-i18n="expect_step3_title">Results</h3>
+            <p data-i18n="expect_step3_desc">Your doctor contacts you within a week. Most scans are clear — if something is found, early detection means better outcomes.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-icon tl-icon-repeat">&#8634;</div>
+          <div>
+            <h3 data-i18n="expect_step4_title">Annual</h3>
+            <p data-i18n="expect_step4_desc">Screen once a year at no cost. It becomes part of your routine preventive care.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 data-i18n="why_pdf_title">Why the Referral PDF?</h3>
+        <p data-i18n="why_pdf_desc">Insurance billing is confusing. This PDF gives your doctor the exact codes (CPT 71271 & ICD-10) to order your scan and ensure it's covered at $0. You don't need to understand them — your doctor does.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: FIND ===== -->
+  <div id="tab-find" class="tab">
+    <div class="app-header hero-a">
+      <h1 data-i18n="find_title">Find Centers</h1>
+      <p data-i18n="find_text_short">Search by zip code.</p>
+    </div>
+    <div class="app-body">
+      <div class="card">
+        <form id="locator-form" class="locator-form" autocomplete="off">
+          <div class="form-group">
+            <label for="zip-code" data-i18n="label_zip">Zip Code</label>
+            <input type="text" id="zip-code" pattern="[0-9]{5}" maxlength="5" inputmode="numeric" placeholder="92101" required>
+          </div>
+          <button type="submit" class="btn-primary" data-i18n="find_btn">Search</button>
+        </form>
+      </div>
+
+      <div id="locator-results" class="hidden">
+        <div id="locator-loading" class="locator-loading hidden" data-i18n="find_loading">Searching...</div>
+        <div id="locator-map-wrap" class="locator-map-wrap hidden">
+          <iframe id="locator-map" class="locator-map" frameborder="0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div id="locator-list" class="locator-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB: MORE (FAQ + Privacy + Stories) ===== -->
+  <div id="tab-more" class="tab">
+    <div class="app-header hero-a">
+      <h1 data-i18n="faq_title">More Info</h1>
+    </div>
+    <div class="app-body">
+
+      <div class="card">
+        <h3 data-i18n="faq_title">FAQ</h3>
+        <details>
+          <summary>What is a low-dose CT scan?</summary>
+          <p>A quick, painless imaging test that takes detailed pictures of your lungs using very low radiation. About 60 seconds. No needles, no fasting.</p>
+        </details>
+        <details>
+          <summary>Why is it free?</summary>
+          <p>The ACA requires insurers to cover USPSTF Grade B screenings at $0. That means no copay, no deductible for eligible individuals.</p>
+        </details>
+        <details>
+          <summary>What are "pack-years"?</summary>
+          <p>(Packs/day) x (years smoked). Example: 1 pack/day x 20 years = 20 pack-years. You need 20+ to qualify.</p>
+        </details>
+        <details>
+          <summary>What if I already quit?</summary>
+          <p>Still eligible if you quit within the last 15 years. Quitting is the best thing you can do — screening is the second best.</p>
+        </details>
+        <details>
+          <summary>What does the referral PDF do?</summary>
+          <p>A document with the correct billing codes (CPT 71271, ICD-10) so your doctor can order the scan and your insurance covers it at $0.</p>
+        </details>
+      </div>
+
+      <div class="card">
+        <h3 data-i18n="privacy_title">Privacy</h3>
+        <p data-i18n="privacy_desc"><strong>Zero-data architecture.</strong> Everything runs in your browser. No health info is collected, stored, or sent anywhere. Close the page and your answers disappear.</p>
+      </div>
+
+      <div class="card">
+        <h3 data-i18n="stories_title">Voices of Early Detection</h3>
+        <blockquote class="testimonial-mini">
+          <p>"They caught it at Stage 1. That was four years ago. I'm still here."</p>
+          <cite>— Jim, 63, Veteran</cite>
+        </blockquote>
+        <blockquote class="testimonial-mini">
+          <p>"It was free, painless, and it saved my life."</p>
+          <cite>— Maria, 58</cite>
+        </blockquote>
+        <blockquote class="testimonial-mini">
+          <p>"Early detection gave me more time with my grandkids."</p>
+          <cite>— Robert, 67</cite>
+        </blockquote>
+      </div>
+
+      <div class="card card-footer-info">
+        <p>BreatheEasy is a public health initiative.</p>
+        <p>Based on <a href="https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening" target="_blank" rel="noopener">USPSTF 2021 Guidelines</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BOTTOM NAVIGATION BAR ===== -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="tab-home">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span data-i18n="nav_home">Home</span>
+    </button>
+    <button class="nav-btn" data-tab="tab-scan">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span data-i18n="nav_scan">Scan Day</span>
+    </button>
+    <button class="nav-btn" data-tab="tab-find">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span data-i18n="nav_find">Find</span>
+    </button>
+    <button class="nav-btn" data-tab="tab-more">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      <span data-i18n="nav_more">More</span>
+    </button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
