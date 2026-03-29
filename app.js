@@ -341,6 +341,7 @@ var translations = {
 
   // Calculator
   calc_title: { en: 'Am I Eligible?', es: '¿Soy elegible?' },
+  calc_note: { en: 'For adults aged 50–80 with a smoking history. Per USPSTF 2021 guidelines.', es: 'Para adultos de 50–80 años con historial de tabaquismo. Según las guías USPSTF 2021.' },
   label_age: { en: 'Your Age', es: 'Su edad' },
   label_packs: { en: 'Packs Per Day', es: 'Paquetes por día' },
   hint_pack: { en: '1 pack = 20 cigarettes', es: '1 paquete = 20 cigarrillos' },
