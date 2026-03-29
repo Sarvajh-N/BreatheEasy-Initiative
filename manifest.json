@@ -2,7 +2,7 @@
   "name": "BreatheEasy — Lung Cancer Screening",
   "short_name": "BreatheEasy",
   "description": "Check your eligibility for free lung cancer screening and get a physician referral.",
-  "start_url": "/breatheasy/",
+  "start_url": "/BreatheEasy-Initiative/",
   "display": "standalone",
   "background_color": "#fafbfc",
   "theme_color": "#1e3a5f",
