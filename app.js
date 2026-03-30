@@ -392,8 +392,8 @@ var translations = {
   },
   why_pdf_title: { en: 'Why the Referral PDF?', es: '¿Por qué el PDF?' },
   why_pdf_desc: {
-    en: "Insurance billing is confusing. This PDF gives your doctor the exact codes (CPT 71271 & ICD-10) to order your scan and ensure it's covered at $0. You don't need to understand them — your doctor does.",
-    es: 'La facturación médica es confusa. Este PDF le da a su médico los códigos exactos (CPT 71271 e ICD-10) para ordenar su prueba y asegurar cobertura a $0. Usted no necesita entenderlos — su médico sí.'
+    en: "Insurance billing is confusing. This PDF gives your doctor the exact codes (CPT 71271 & ICD-10) to order your scan and ensure it's covered at $0.",
+    es: 'La facturación médica es confusa. Este PDF le da a su médico los códigos exactos (CPT 71271 e ICD-10) para ordenar su prueba y asegurar cobertura a $0.'
   },
 
   // Find
