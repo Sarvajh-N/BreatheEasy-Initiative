@@ -50,9 +50,9 @@
             <input type="number" id="age" min="18" max="120" placeholder="55" required>
           </div>
           <div class="form-group">
-            <label for="packs-per-day" data-i18n="label_packs">Packs Per Day</label>
-            <input type="number" id="packs-per-day" min="0" max="10" step="0.5" placeholder="1" required>
-            <span class="hint" data-i18n="hint_pack">1 pack = 20 cigarettes</span>
+            <label for="packs-per-day" data-i18n="label_packs">Cigarettes Per Day</label>
+            <input type="number" id="packs-per-day" min="0" max="200" step="1" placeholder="20" required>
+            <span class="hint" data-i18n="hint_pack">20 cigarettes = 1 pack</span>
           </div>
           <div class="form-group">
             <label for="years-smoked" data-i18n="label_years">Years Smoked</label>
@@ -83,6 +83,15 @@
           <button id="calendar-btn" class="btn-outline" data-i18n="calendar_btn">Add Calendar Reminder</button>
           <p id="intent-thanks" class="hidden toast" data-i18n="intent_thanks">Thank you! Early detection saves lives.</p>
           <p id="calendar-thanks" class="hidden toast" data-i18n="calendar_thanks">Reminder added!</p>
+        </div>
+        <div class="risk-factors-note">
+          <p data-i18n="risk_factors_heading"><strong>Even if you don't meet the criteria above, please see your doctor for screening if you have experienced:</strong></p>
+          <ul>
+            <li data-i18n="risk_secondhand">Secondhand smoke exposure</li>
+            <li data-i18n="risk_radon">Radon exposure</li>
+            <li data-i18n="risk_vaping">Excessive vaping</li>
+            <li data-i18n="risk_lung_disease">Other lung diseases like COPD or pulmonary fibrosis</li>
+          </ul>
         </div>
       </div>
 

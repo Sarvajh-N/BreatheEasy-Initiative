@@ -42,12 +42,12 @@ form.addEventListener('submit', function(e) {
   e.preventDefault();
 
   var age = parseInt(document.getElementById('age').value);
-  var packsPerDay = parseFloat(document.getElementById('packs-per-day').value);
+  var cigsPerDay = parseFloat(document.getElementById('packs-per-day').value);
   var yearsSmoked = parseInt(document.getElementById('years-smoked').value);
   var quitYears = parseInt(document.getElementById('quit-years').value);
 
-  // Pack-years = packs/day x years smoked
-  var packYears = packsPerDay * yearsSmoked;
+  // Pack-years = (cigarettes/day ÷ 20) x years smoked
+  var packYears = (cigsPerDay / 20) * yearsSmoked;
 
   // USPSTF 2021: age 50-80, >= 20 pack-years, quit <= 15 years ago
   var ageOk = age >= 50 && age <= 80;
@@ -343,8 +343,8 @@ var translations = {
   calc_title: { en: 'Am I Eligible?', es: '¿Soy elegible?' },
   calc_note: { en: 'For adults aged 50–80 with a smoking history. Per USPSTF 2021 guidelines.', es: 'Para adultos de 50–80 años con historial de tabaquismo. Según las guías USPSTF 2021.' },
   label_age: { en: 'Your Age', es: 'Su edad' },
-  label_packs: { en: 'Packs Per Day', es: 'Paquetes por día' },
-  hint_pack: { en: '1 pack = 20 cigarettes', es: '1 paquete = 20 cigarrillos' },
+  label_packs: { en: 'Cigarettes Per Day', es: 'Cigarrillos por día' },
+  hint_pack: { en: '20 cigarettes = 1 pack', es: '20 cigarrillos = 1 paquete' },
   label_years: { en: 'Years Smoked', es: 'Años fumando' },
   label_quit: { en: 'Years Since Quitting', es: 'Años desde que dejó' },
   hint_quit: { en: 'Enter 0 if you still smoke', es: 'Ingrese 0 si aún fuma' },
@@ -358,6 +358,11 @@ var translations = {
   calendar_btn: { en: 'Add Calendar Reminder', es: 'Agregar recordatorio' },
   intent_thanks: { en: 'Thank you! Early detection saves lives.', es: '¡Gracias! La detección temprana salva vidas.' },
   calendar_thanks: { en: 'Reminder added!', es: '¡Recordatorio agregado!' },
+  risk_factors_heading: { en: 'Even if you don\'t meet the criteria above, please see your doctor for screening if you have experienced:', es: 'Aunque no cumpla con los criterios anteriores, consulte a su médico si ha experimentado:' },
+  risk_secondhand: { en: 'Secondhand smoke exposure', es: 'Exposición al humo de segunda mano' },
+  risk_radon: { en: 'Radon exposure', es: 'Exposición al radón' },
+  risk_vaping: { en: 'Excessive vaping', es: 'Vapeo excesivo' },
+  risk_lung_disease: { en: 'Other lung diseases like COPD or pulmonary fibrosis', es: 'Otras enfermedades pulmonares como EPOC o fibrosis pulmonar' },
   ineligible_title: { en: 'Not Currently Eligible', es: 'No elegible actualmente' },
   ineligible_advice: { en: 'Talk to your doctor if you have concerns.', es: 'Hable con su médico si tiene preocupaciones.' },
 
