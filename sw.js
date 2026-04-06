@@ -10,14 +10,13 @@
 
 // CACHE_NAME is a version label. When you update the app, change this string
 // (e.g., 'breatheasy-v2') so the service worker knows to re-download everything.
-var CACHE_NAME = 'breatheasy-v2';
+var CACHE_NAME = 'breatheasy-v3';
 
 // List of files to cache when the service worker is first installed.
 // These are all the files needed to run the app offline.
 var FILES_TO_CACHE = [
   './',
   './index.html',
-  './b/index.html',
   './style.css',
   './app.js',
   './icon-192.png',
