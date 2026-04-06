@@ -62,7 +62,7 @@
           </div>
           <div class="form-group">
             <label for="packs-per-day" data-i18n="label_packs">Cigarettes Per Day</label>
-            <input type="number" id="packs-per-day" min="0" max="200" step="1" placeholder="20" required>
+            <input type="number" id="packs-per-day" min="0" max="200" step="1" placeholder="0" value="0" required>
             <span class="hint" data-i18n="hint_pack">20 cigarettes = 1 pack</span>
           </div>
           <div class="form-group">
@@ -96,7 +96,7 @@
           <p id="calendar-thanks" class="hidden toast" data-i18n="calendar_thanks">Reminder added!</p>
         </div>
         <div class="risk-factors-note">
-          <p data-i18n="risk_factors_heading"><strong>Even if you don't meet the criteria above, please see your doctor for screening if you have experienced:</strong></p>
+          <p data-i18n="risk_factors_heading"><strong>Even if you fit these criteria, please also see your doctor if you have experienced:</strong></p>
           <ul>
             <li data-i18n="risk_secondhand">Secondhand smoke exposure</li>
             <li data-i18n="risk_radon">Radon exposure</li>
@@ -117,6 +117,15 @@
         </div>
         <p id="ineligible-reason" class="reason-text"></p>
         <p data-i18n="ineligible_advice">Talk to your doctor if you have concerns.</p>
+        <div class="risk-factors-note">
+          <p data-i18n="risk_factors_ineligible"><strong>However, please see your doctor for screening if you have experienced:</strong></p>
+          <ul>
+            <li data-i18n="risk_secondhand">Secondhand smoke exposure</li>
+            <li data-i18n="risk_radon">Radon exposure</li>
+            <li data-i18n="risk_vaping">Excessive vaping</li>
+            <li data-i18n="risk_lung_disease">Other lung diseases like COPD or pulmonary fibrosis</li>
+          </ul>
+        </div>
       </div>
 
       <!-- PRIVACY BADGE -->
