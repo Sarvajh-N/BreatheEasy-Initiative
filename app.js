@@ -46,6 +46,12 @@ form.addEventListener('submit', function(e) {
   var yearsSmoked = parseInt(document.getElementById('years-smoked').value);
   var quitYears = parseInt(document.getElementById('quit-years').value);
 
+  // Validate: years smoked cannot exceed age
+  if (yearsSmoked > age) {
+    alert('Years smoked cannot be greater than your age.');
+    return;
+  }
+
   // Pack-years = (cigarettes/day ÷ 20) x years smoked
   var packYears = (cigsPerDay / 20) * yearsSmoked;
 
@@ -256,6 +262,8 @@ document.getElementById('calendar-btn').addEventListener('click', function() {
 
 // ===== SCREENING CENTER LOCATOR =====
 
+var API_BASE = 'https://breatheasy-api.vercel.app';
+
 document.getElementById('locator-form').addEventListener('submit', function(e) {
   e.preventDefault();
 
@@ -281,19 +289,72 @@ document.getElementById('locator-form').addEventListener('submit', function(e) {
 
   var embedUrl = 'https://www.google.com/maps?q=lung+cancer+screening+center+near+' + zip + '&output=embed';
 
-  fetch('https://api.zippopotam.us/us/' + zip)
-    .then(function(r) { if (!r.ok) throw new Error('bad zip'); return r.json(); })
+  // Call BreatheEasy API for verified centers
+  fetch(API_BASE + '/api/centers?zip=' + zip + '&lang=' + currentLang)
+    .then(function(r) { if (!r.ok) throw new Error('api error'); return r.json(); })
     .then(function(data) {
       loadingDiv.classList.add('hidden');
-      var city = data.places[0]['place name'];
-      var state = data.places[0]['state abbreviation'];
+      mapFrame.src = embedUrl;
+      mapWrap.classList.remove('hidden');
 
+      var html = '';
+
+      // Show verified centers from API
+      if (data.centers && data.centers.length > 0) {
+        html += '<div class="locator-card" style="border-left:4px solid #10b981;">';
+        html += '<h4 style="color:#065f46;">' +
+          (currentLang === 'es' ? 'Centros de detección verificados' : 'Verified Screening Centers') +
+          ' (' + data.location + ')</h4>';
+        data.centers.forEach(function(c) {
+          html += '<div style="margin:10px 0;padding:10px 0;border-bottom:1px solid #e5e7eb;">';
+          html += '<strong>' + c.name + '</strong>';
+          if (c.acr_designated) {
+            html += ' <span style="background:#065f46;color:#fff;font-size:0.7rem;padding:2px 6px;border-radius:4px;">ACR Designated</span>';
+          }
+          html += '<br><span style="font-size:0.85rem;color:#4b5563;">' + c.address + ', ' + c.city + ', ' + c.state + ' ' + c.zip + '</span>';
+          html += '<br><span style="font-size:0.85rem;color:#10b981;font-weight:600;">' + c.distance_miles + ' miles away</span>';
+          html += '<br><a href="tel:' + c.phone.replace(/[^+\d]/g, '') + '" style="color:#10b981;font-weight:600;">' + c.phone + '</a>';
+          html += ' &middot; <a href="https://www.google.com/maps/search/' + encodeURIComponent(c.name + ' ' + c.address + ' ' + c.city) + '" target="_blank" rel="noopener" class="locator-directions">' +
+            (currentLang === 'es' ? 'Direcciones' : 'Directions') + ' &rarr;</a>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+
+      // Google Maps card
+      html += '<div class="locator-card">';
+      html += '<h4>' + (currentLang === 'es' ? 'Más centros en Google Maps' : 'More centers on Google Maps') + '</h4>';
+      html += '<p>' + (currentLang === 'es' ? 'Toque los marcadores del mapa para ver detalles.' : 'Tap map pins for details.') + '</p>';
+      html += '<a href="' + data.google_maps_link + '" target="_blank" rel="noopener" class="locator-directions">' +
+        (currentLang === 'es' ? 'Abrir en Google Maps' : 'Open in Google Maps') + ' &rarr;</a>';
+      html += '</div>';
+
+      // Call script from API
+      if (data.call_script) {
+        html += '<div class="locator-card">';
+        html += '<h4>' + data.call_script.title + '</h4>';
+        html += '<p><em>"' + data.call_script.intro + '"</em></p>';
+        html += '<ul style="margin:8px 0;padding-left:20px;font-size:0.85rem;color:#4b5563;">';
+        data.call_script.questions.forEach(function(q) {
+          html += '<li style="margin:4px 0;">' + q + '</li>';
+        });
+        html += '</ul>';
+        html += '<p style="font-size:0.8rem;color:#10b981;font-weight:600;">' + data.call_script.tip + '</p>';
+        html += '</div>';
+      }
+
+      listDiv.innerHTML = html;
+      trackEvent('locator_search', zip);
+    })
+    .catch(function() {
+      // Fallback to Google Maps if API fails
+      loadingDiv.classList.add('hidden');
       mapFrame.src = embedUrl;
       mapWrap.classList.remove('hidden');
 
       var html = '';
       html += '<div class="locator-card">';
-      html += '<h4>' + city + ', ' + state + ' ' + zip + '</h4>';
+      html += '<h4>' + zip + '</h4>';
       html += '<p>' + (currentLang === 'es' ? 'Toque los marcadores del mapa para ver detalles.' : 'Tap map pins for details.') + '</p>';
       html += '<a href="https://www.google.com/maps/search/lung+cancer+screening+center/' + zip + '" target="_blank" rel="noopener" class="locator-directions">' +
         (currentLang === 'es' ? 'Abrir en Google Maps' : 'Open in Google Maps') + ' &rarr;</a>';
@@ -308,12 +369,6 @@ document.getElementById('locator-form').addEventListener('submit', function(e) {
 
       listDiv.innerHTML = html;
       trackEvent('locator_search', zip);
-    })
-    .catch(function() {
-      loadingDiv.classList.add('hidden');
-      mapWrap.classList.add('hidden');
-      listDiv.innerHTML = '<div class="locator-no-results">' +
-        (currentLang === 'es' ? 'Código postal no encontrado.' : 'Zip code not found. Try again.') + '</div>';
     });
 });
 
@@ -378,27 +433,27 @@ var translations = {
   expect_subtitle: { en: 'Quick, painless, nothing to fear.', es: 'Rápido, indoloro, nada que temer.' },
   expect_step1_title: { en: 'Check In', es: 'Registro' },
   expect_step1_desc: {
-    en: 'No fasting, no prep, no needles. Wear comfy clothes without metal — you may change into a gown.',
+    en: 'No fasting, no prep, no needles. Wear comfy clothes without metal — you may be asked to change into a gown.',
     es: 'Sin ayuno, sin preparación, sin agujas. Ropa cómoda sin metal — pueden darle una bata.'
   },
   expect_step2_title: { en: 'The Scan (~60 sec)', es: 'La prueba (~60 seg)' },
   expect_step2_desc: {
-    en: "Lie on a table that slides into an open ring — not a closed tube. Hold your breath 10 seconds and you're done.",
+    en: "Lie on a table that slides into an open ring — not a closed tube. Hold your breath for 10 seconds and you're done.",
     es: 'Acuéstese en una mesa que entra en un anillo abierto — no un tubo cerrado. Contenga la respiración 10 segundos y listo.'
   },
   expect_step3_title: { en: 'Results', es: 'Resultados' },
   expect_step3_desc: {
-    en: 'Your doctor contacts you within a week. Most scans are clear — if something is found, early detection means better outcomes.',
+    en: 'Your doctor will contact you within a few weeks. If something is found, early detection means better outcomes.',
     es: 'Su médico le contacta en una semana. La mayoría salen bien — si algo se encuentra, la detección temprana mejora los resultados.'
   },
   expect_step4_title: { en: 'Annual', es: 'Anual' },
   expect_step4_desc: {
-    en: 'Screen once a year at no cost. It becomes part of your routine preventive care.',
+    en: 'Screen once a year at no cost under most private insurances and Medicare. It becomes part of your routine preventive care.',
     es: 'Una prueba al año sin costo. Se vuelve parte de su cuidado preventivo.'
   },
   why_pdf_title: { en: 'Why the Referral PDF?', es: '¿Por qué el PDF?' },
   why_pdf_desc: {
-    en: "Insurance billing is confusing. This PDF gives your doctor the exact codes (CPT 71271 & ICD-10) to order your scan and ensure it's covered at $0.",
+    en: "Insurance billing is confusing. This PDF gives your doctor the exact codes (CPT 71271 & ICD-10) to order your scan and ensure it's covered at $0 under most private insurances and Medicare.",
     es: 'La facturación médica es confusa. Este PDF le da a su médico los códigos exactos (CPT 71271 e ICD-10) para ordenar su prueba y asegurar cobertura a $0.'
   },
 
